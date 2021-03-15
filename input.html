@@ -30,17 +30,19 @@
                 border-color: #DDD;
             }
         </style>
-        <script type="text/javascript" src="test.js"></script>
+        <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+        <script type="text/javascript" src="input.js"></script>
     </head>
     <body>
         <h1><LABEL id="lblTitle">INPUT</LABEL></h1>
         <p>
-           <LABEL id="lblNumber">00</LABEL>
-           <input type="text" id="txtInput" size="5" maxlength="20">
+           <LABEL id="lblNumber">lblNumber</LABEL>
+           <input type="text" id="txtInput" size="20" maxlength="20">
+           <input type="button" value="Entry" id="btnEntry">
         </p>
+        <input type="button" value="Menu" id="btnMenu">
 
-        <input type="button" value="Submit" id="btnSubmit">
-
+        <!--
         <fieldset> 
             <legend>REGISTERED WORD</legend>
             <LABEL id="lblReg">lblReg</LABEL>
@@ -50,8 +52,6 @@
             <legend>WRONG WORD</legend>
             <LABEL id="lbl">lblWrong</LABEL>
         </fieldset> 
-
-        <script>
-        </script>
+        -->
     </body>
 </html>

@@ -20,15 +20,16 @@ function clickBtnNum() {
     'use strict';
 
     let mode;
-
-    for(let i=0;i < eRdoMode.length;i++){
+    for(let i=0;i<eRdoMode.length;i++){
 	if(eRdoMode[i].checked){mode = eRdoMode[i].value}
     }
-    
-    console.log('mode -> ' + mode);
-    console.log('eventv2 -> ' + event.currentTarget.dataset['index']);   
-    
-    window.location.href = mode + '.html?rangeIndex=' + event.currentTarget.dataset['index'];
+    let rangeIndex = event.currentTarget.dataset['index'];
+    if(mode === 'input' && (rangeIndex === 'random' || rangeIndex === 'all')){
+        alert('When "input" is selected in the mode, select "number" as the target.');
+	return;
+    }else{
+	window.location.href = mode + '.html?rangeIndex=' + rangeIndex;
+    }
 }
 window.onload = function () {
     'use strict';
