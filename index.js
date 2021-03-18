@@ -16,6 +16,13 @@ let eBtnAll;
 let eRdoInput;
 let eRdoMode;
 
+window.addEventListener('DOMContentLoaded', function() {
+    'use strict';
+    let el = document.createElement("script");
+    el.src = "common.js";
+    document.body.appendChild(el);
+})
+
 function clickBtnNum() {
     'use strict';
 
@@ -27,6 +34,28 @@ function clickBtnNum() {
     if(mode === 'input' && (rangeIndex === 'random' || rangeIndex === 'all')){
         alert('When "input" is selected in the mode, select "number" as the target.');
 	return;
+    }else if(mode === 'test'){
+        //--------------
+	//DB definition
+	//--------------
+	let db = getDexie(); 
+
+	db.version(2).stores({
+	    input: getDbColInput()
+	});
+
+	db.input.where("num")
+	    .between(parseInt(rangeIndex), parseInt(rangeIndex) + 10)
+	    .toArray()
+	    .then((rec)=>{
+	        if(rec.length  === 10){
+	            window.location.href = mode + '.html?rangeIndex=' + rangeIndex;
+		}else{
+		    alert("There is no target registration. Please enter before the test.");
+		}
+	    })
+	    .catch((error)=>{console.log(error);});
+
     }else{
 	window.location.href = mode + '.html?rangeIndex=' + rangeIndex;
     }
