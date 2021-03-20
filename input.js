@@ -1,4 +1,4 @@
-/*globals window, document, setInterval, event */
+/*globals window, document, event */
 
 let eBtnEntry;
 let eTxtInput;
@@ -72,6 +72,7 @@ function clickBtnEntry(){
 let endNumber;
 let currentNumber;
 let rangeIndex;
+let startNumber;
 
 window.addEventListener('DOMContentLoaded', function() {
     'use strict';
@@ -94,11 +95,13 @@ window.onload = function () {
 
     //
     let param = location.search.split('=')
-    rangeIndex = param[1]
-    eLblNumber.innerText = to2Digit(rangeIndex);
+    rangeIndex = param[1];
+    startNumber = parseInt(rangeIndex) * 10;
+    eLblNumber.innerText = to2Digit(startNumber);
 
-    currentNumber = parseInt(rangeIndex);
-    endNumber = parseInt(rangeIndex) + 10;
+    currentNumber = startNumber;
+    //currentNumber = parseInt(rangeIndex);
+    endNumber = startNumber + 10;
 
     //---
     //DB
@@ -107,8 +110,7 @@ window.onload = function () {
     db.version(2).stores({
 	play_log: getDbColPlayLog(),
 	input: getDbColInput(),
-	input_back: "&[num+log_date], word, insert_date",
-	test: "&[num+log_date], word, sec"
+	input_back: getDbColInputBack()
     });
 
 

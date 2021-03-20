@@ -31,6 +31,8 @@ let recSec;
 let recNum;
 let recStartTime;
 
+let startNumber;
+
 function init(){
     currentIndex = 0;
     correctCount = 0;
@@ -298,8 +300,9 @@ window.onload = function () {
     if(param.length !== 2){
 	alert('There are no parameters in the URL. Please start from the menu.');
     }else{
-	rangeIndex = param[1] * 10;
-	loadCorrectAnswer(rangeIndex);
+	startNumber = param[1] * 10;
+	console.log('startNumber -> ' + startNumber);
+	loadCorrectAnswer(startNumber);
     }
 
     init();
