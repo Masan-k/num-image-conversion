@@ -50,7 +50,7 @@ function clickBtnNum() {
 	    play_log: getDbColPlayLog(),
 	    input: getDbColInput(),
 	    input_back: getDbColInputBack(),
-	    test: getDbColTest();
+	    test: getDbColTest()
 	});
 	    
 	let fromNumber = parseInt(rangeIndex) * 10;
@@ -152,7 +152,7 @@ function drawCtxLastYear() {
 	    play_log: getDbColPlayLog(),
 	    input: getDbColInput(),
 	    input_back: getDbColInputBack(),
-	    test: getDbColTest();
+	    test: getDbColTest()
     });
 	 
     let dateYmd_work = [];    
