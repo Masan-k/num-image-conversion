@@ -10,6 +10,13 @@ function getDbColInput(){
     return  "&num, word, log_date";
 }
 
+function getDbColInputBack(){
+    return "&[num+log_date], word, insert_date";
+}
+
+function getDbColTest(){
+    return "&[num+log_date], word, sec";
+}
 
 function getLogdate(){
      'use strict';
