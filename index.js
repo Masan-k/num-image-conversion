@@ -29,6 +29,7 @@ window.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(el);
 })
 
+let db;
 function clickBtnNum() {
     'use strict';
 
@@ -44,10 +45,12 @@ function clickBtnNum() {
         //--------------
 	//DB definition
 	//--------------
-	let db = getDexie(); 
-
-	db.version(2).stores({
-	    input: getDbColInput()
+	db = getDexie(); 
+	db.version(1).stores({
+	    play_log: getDbColPlayLog(),
+	    input: getDbColInput(),
+	    input_back: getDbColInputBack(),
+	    test: getDbColTest();
 	});
 	    
 	let fromNumber = parseInt(rangeIndex) * 10;
@@ -144,11 +147,14 @@ function drawCtxLastYear() {
     //--------------
     //DB(getRecord)
     //--------------
-    let db = getDexie(); 
-    db.version(2).stores({
-	play_log: getDbColPlayLog()
+    db = getDexie(); 
+    db.version(1).stores({
+	    play_log: getDbColPlayLog(),
+	    input: getDbColInput(),
+	    input_back: getDbColInputBack(),
+	    test: getDbColTest();
     });
-
+	 
     let dateYmd_work = [];    
     let record = new Object();
     let date = [];
