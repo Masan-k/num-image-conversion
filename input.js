@@ -64,7 +64,7 @@ function clickBtnEntry(){
 	eTxtInput.value = '';
     }else{
         saveScore();
-        eLblNumber.innerText = to2Digit(rangeIndex) + '-' + (parseInt(rangeIndex) + 9);
+        eLblNumber.innerText = to2Digit(rangeIndex) + '-' + to2Digit((parseInt(rangeIndex) + 9));
 	eTxtInput.value = 'Completion of registration';
     }
 }
@@ -100,7 +100,6 @@ window.onload = function () {
     eLblNumber.innerText = to2Digit(startNumber);
 
     currentNumber = startNumber;
-    //currentNumber = parseInt(rangeIndex);
     endNumber = startNumber + 10;
 
     //---
@@ -112,9 +111,6 @@ window.onload = function () {
 	input: getDbColInput(),
 	input_back: getDbColInputBack()
     });
-
-
-
 }
 
 
