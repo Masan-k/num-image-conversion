@@ -42,17 +42,7 @@ function clickBtnNum() {
         alert('When "input" is selected in the mode, select "number" as the target.');
 	return;
     }else if(mode === 'test'){
-        //--------------
-	//DB definition
-	//--------------
-	db = getDexie(); 
-	db.version(1).stores({
-	    play_log: getDbColPlayLog(),
-	    input: getDbColInput(),
-	    input_back: getDbColInputBack(),
-	    test: getDbColTest()
-	});
-	    
+    
 	let fromNumber = parseInt(rangeIndex) * 10;
 	let wordCount
 	
@@ -89,8 +79,6 @@ function getRectColor(count){
         return '#007839';
     }
 }
-function getRecord(){
-   }
 
 function drawCtxLastYear() {
     'use strict';
@@ -147,14 +135,6 @@ function drawCtxLastYear() {
     //--------------
     //DB(getRecord)
     //--------------
-    db = getDexie(); 
-    db.version(1).stores({
-	    play_log: getDbColPlayLog(),
-	    input: getDbColInput(),
-	    input_back: getDbColInputBack(),
-	    test: getDbColTest()
-    });
-	 
     let dateYmd_work = [];    
     let record = new Object();
     let date = [];
@@ -269,7 +249,16 @@ window.onload = function () {
     eBtn90.addEventListener("click", clickBtnNum, false);
     eBtnRandom.addEventListener("click", clickBtnNum, false);
     eBtnAll.addEventListener("click", clickBtnNum, false);
-
+    
+    //---
+    //DB
+    //---
+    db = getDexie(); 
+    db.version(2).stores({
+	play_log: getDbColPlayLog(),
+	input: getDbColInput()
+    });
+	
     drawCtxLastYear();
 }
 
