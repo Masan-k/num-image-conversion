@@ -61,7 +61,7 @@ function clickBtnEntry(){
     currentNumber += 1;
     if(currentNumber < endNumber){
 	eLblNumber.innerText = to2Digit(currentNumber);
-	eTxtInput.value = '';
+	setWord();
     }else{
         saveScore();
         eLblNumber.innerText = to2Digit(rangeIndex) + '-' + to2Digit((parseInt(rangeIndex) + 9));
@@ -69,6 +69,18 @@ function clickBtnEntry(){
     }
 }
 
+function setWord(){
+    console.log('currentNumber -> ' + currentNumber);
+    db.input.get(currentNumber)
+    　.then((rec)=>{
+	if(rec !== undefined){
+	    eTxtInput.value = rec.word;
+	}else{
+	    eTxtInput.value = '';
+	}
+    })
+
+}
 let endNumber;
 let currentNumber;
 let rangeIndex;
@@ -84,24 +96,7 @@ window.addEventListener('DOMContentLoaded', function() {
 window.onload = function () {
     'use strict';
     
-    document.body.onkeyup = keyInput;
-
-    eBtnEntry = document.getElementById("btnEntry");
-    eBtnMenu = document.getElementById("btnMenu");
-    eTxtInput = document.getElementById("txtInput");
-    eLblNumber = document.getElementById("lblNumber");
-    eBtnEntry.addEventListener("click", clickBtnEntry, false);
-    eBtnMenu.addEventListener("click", clickBtnMenu, false);
-
-    //
-    let param = location.search.split('=')
-    rangeIndex = param[1];
-    startNumber = parseInt(rangeIndex) * 10;
-    eLblNumber.innerText = to2Digit(startNumber);
-
-    currentNumber = startNumber;
-    endNumber = startNumber + 10;
-
+    
     //---
     //DB
     //---
@@ -111,6 +106,29 @@ window.onload = function () {
 	input: getDbColInput(),
 	input_back: getDbColInputBack()
     });
+
+    //-----------
+    //getElement
+    //-----------
+    eBtnEntry = document.getElementById("btnEntry");
+    eBtnMenu = document.getElementById("btnMenu");
+    eTxtInput = document.getElementById("txtInput");
+    eLblNumber = document.getElementById("lblNumber");
+    //event
+    document.body.onkeyup = keyInput;
+    eBtnEntry.addEventListener("click", clickBtnEntry, false);
+    eBtnMenu.addEventListener("click", clickBtnMenu, false);
+
+    //-----------
+    //form init
+    //-----------
+    let param = location.search.split('=')
+    rangeIndex = param[1];
+    startNumber = parseInt(rangeIndex) * 10;
+    eLblNumber.innerText = to2Digit(startNumber);
+    currentNumber = startNumber;
+    endNumber = startNumber + 10;
+    setWord();
 }
 
 
