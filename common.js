@@ -11,11 +11,11 @@ function getDbColInput(){
 }
 
 function getDbColInputBack(){
-    return "&[num+log_date], word, insert_date";
+    return "++id, num, log_date, word, insert_date";
 }
 
 function getDbColTest(){
-    return "&[num+log_date], word, sec";
+    return "++id, num, log_date, word, sec";
 }
 
 function getLogdate(){

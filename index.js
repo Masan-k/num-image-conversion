@@ -254,9 +254,11 @@ window.onload = function () {
     //DB
     //---
     db = getDexie(); 
-    db.version(2).stores({
+    db.version(4).stores({
 	play_log: getDbColPlayLog(),
-	input: getDbColInput()
+	input: getDbColInput(),
+	input_back: getDbColInputBack(),
+	test: getDbColTest()
     });
 	
     drawCtxLastYear();

@@ -286,11 +286,10 @@ window.onload = function () {
     //--------------
     db = getDexie(); 
 
-    db.version(2).stores({
+    db.version(4).stores({
 	play_log: getDbColPlayLog(),
 	input: getDbColInput(),
-	input_back: "&[num+log_date], word, insert_date",
-	test: "&[num+log_date], word, sec"
+	test: getDbColTest()
     });
     
     //--------------

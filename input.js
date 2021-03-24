@@ -64,7 +64,7 @@ function clickBtnEntry(){
 	setWord();
     }else{
         saveScore();
-        eLblNumber.innerText = to2Digit(rangeIndex) + '-' + to2Digit((parseInt(rangeIndex) + 9));
+        eLblNumber.innerText = to2Digit(startNumber) + '-' + to2Digit((parseInt(startNumber) + 9));
 	eTxtInput.value = 'Completion of registration';
     }
 }
@@ -101,10 +101,11 @@ window.onload = function () {
     //DB
     //---
     db = getDexie(); 
-    db.version(2).stores({
+    db.version(4).stores({
 	play_log: getDbColPlayLog(),
 	input: getDbColInput(),
-	input_back: getDbColInputBack()
+	input_back: getDbColInputBack(), 
+	test: getDbColTest()
     });
 
     //-----------
