@@ -8,8 +8,6 @@ window.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(el);
 })
 
-let db;
-
 window.onload = function () {
     'use strict';
 
@@ -19,6 +17,7 @@ window.onload = function () {
     //===
     //DB
     //===
+    let db;
     db = getDexie(); 
     db.version(4).stores({
 	play_log: getDbColPlayLog(),

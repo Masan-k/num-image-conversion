@@ -34,6 +34,7 @@ let recStartTime;
 let startNumber;
 
 function init(){
+    'use strict';
     currentIndex = 0;
     correctCount = 0;
     waitCount = WAIT_MAX_COUNT;
@@ -74,6 +75,7 @@ function getRandom(min, max) {
 
 
 function getShuffle(rec){
+    'use strict';
     let workRecord = rec.slice();
     let newRecord = [];
     let maxIndex;
@@ -91,6 +93,7 @@ function getShuffle(rec){
 }
 
 function loadCorrectAnswer(rangeId){
+    'use strict';
     db.input.where("num")
     	.between(parseInt(rangeId), parseInt(rangeId) + 10)
 	.toArray()
@@ -105,6 +108,7 @@ function loadCorrectAnswer(rangeId){
 }    
 
 function saveScore(){
+    'use strict';
     let logDate = getLogdate();
 
     db.play_log.add({log_date:logDate,mode:'test',range_index:rangeIndex});
@@ -142,8 +146,9 @@ function clickBtnPass() {
     missAnswer.push('none');
     
     eTxtInput.value = '';
-    setRecord();
 
+    const isTimeup = true;
+    setRecord(isTimeup);
 
     if(currentIndex !== answers.length){
         currentIndex += 1;
@@ -187,18 +192,26 @@ function countdown() {
 }
 
 function setStartTimer() {
+    'use strict';
     let nowDate = new Date();
     recStartTime = nowDate.getTime();
 }
 
-function setRecord(){
-    recWord.push(eTxtInput.value);
-    recNum.push(answers[currentIndex].num);
+function setRecord(isTimeup){
+    'use strict';
 
     let nowDate = new Date()
     let sec = (nowDate.getTime() - recStartTime) / 1000 ;
-    recSec.push(sec);
     recStartTime = nowDate.getTime();
+
+    if(isTimeup){
+	recSec.push(WAIT_MAX_COUNT);
+    }else{
+	recSec.push(sec);
+    }
+
+    recWord.push(eTxtInput.value);
+    recNum.push(answers[currentIndex].num);
 }
 
 
@@ -218,7 +231,8 @@ function clickBtnEntry(){
     'use strict';
     
     if(currentCorrect.includes(eTxtInput.value)){
-        setRecord();
+	const isTimeup = false;
+        setRecord(isTimeup);
 
         currentIndex += 1;
         correctCount += 1;
@@ -300,7 +314,6 @@ window.onload = function () {
 	alert('There are no parameters in the URL. Please start from the menu.');
     }else{
 	startNumber = param[1] * 10;
-	console.log('startNumber -> ' + startNumber);
 	loadCorrectAnswer(startNumber);
     }
 
