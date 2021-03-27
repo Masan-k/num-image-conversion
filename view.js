@@ -125,12 +125,12 @@ window.onload = function () {
 		    cellNum.appendChild(document.createTextNode(to2Digit(rec.num)));
 		    cellWord.appendChild(document.createTextNode(rec.word));
 
-		    let sec = -1;
+		    let sec = '-';
 		    let cnt = 0;
 		    for(let i in recordNum){
 
 			if(rec.num === recordNum[i]){
-			    sec = latestSec[i];
+			    sec = Math.round(latestSec[i] * Math.pow(10, 1)) / Math.pow(10,1);
 			    cnt = recordCount[i];
 			    break;
 			}
