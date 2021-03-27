@@ -37,6 +37,7 @@ window.onload = function () {
     const cellNum = document.createElement("th");
     const cellWord = document.createElement('th');
     const cellTime = document.createElement('th');
+    const cellCount = document.createElement('th');
 
     const cellData = document.createElement("td");
     
@@ -49,10 +50,12 @@ window.onload = function () {
     //-------------
     cellNum.appendChild(document.createTextNode("NUM"));
     cellWord.appendChild(document.createTextNode("WORD"));
-    cellTime.appendChild(document.createTextNode("ANSWER TIME:SEC"));
+    cellTime.appendChild(document.createTextNode("LATEST"));
+    cellCount.appendChild(document.createTextNode("COUNT"));
 
     rowHead.appendChild(cellNum);
     rowHead.appendChild(cellWord);
+    rowHead.appendChild(cellCount);
     rowHead.appendChild(cellTime);
     
     thead.appendChild(rowHead);
@@ -62,40 +65,44 @@ window.onload = function () {
     //getLatestRecord
     //----------------
 
-    let latestNum = [];
-    //let latestLogDate = [];
+    let recordNum = [];
     let latestSec = [];
-
+    let recordCount = [];
+    
     let num = -1;
     let maxLogDate;
     let sec = -1;
+    let cnt = 1;
+
 
     //Search for "-1" to use "SortBy"
     db.test.where('num').above(-1).sortBy('num').then((rec)=>{
 
 	for(let i in rec){
 	    if(num !== -1 && num !== rec[i].num){
-		latestNum.push(num);
-		//latestLogDate.push(maxLogDate);
+		recordNum.push(num);
 		latestSec.push(sec);
+		recordCount.push(cnt);
 	    }
 
 	    if(num !== rec[i].num){
 		num = rec[i].num;
 		maxLogDate = rec[i].log_date;
 		sec = rec[i].sec;   
-	
+
+		cnt = 1;
 	    }else{
 		if(maxLogDate < rec[i].log_date){
 		    maxLogDate = rec[i].log_date;
 		    sec = rec[i].sec;
 		}
+		cnt += 1;
 	    }
 	}
-	latestNum.push(num);
-	//latestLogDate.push(maxLogDate);
+	recordNum.push(num);
 	latestSec.push(sec);
 
+	recordCount.push(cnt);
     }).then(() =>{
 
 	//------------
@@ -110,7 +117,8 @@ window.onload = function () {
 		}else{
 		    const cellNum = document.createElement('td');
 		    const cellWord = document.createElement('td');
-		    const cellSec = document.createElement('td');
+		    const cellLatest = document.createElement('td');
+		    const cellCount = document.createElement('td');
 
 		    const rowData = document.createElement("tr");
 
@@ -118,18 +126,22 @@ window.onload = function () {
 		    cellWord.appendChild(document.createTextNode(rec.word));
 
 		    let sec = -1;
-		    for(let i in latestNum){
+		    let cnt = 0;
+		    for(let i in recordNum){
 
-			if(rec.num === latestNum[i]){
+			if(rec.num === recordNum[i]){
 			    sec = latestSec[i];
+			    cnt = recordCount[i];
 			    break;
 			}
 		    }
-		    cellSec.appendChild(document.createTextNode(sec));
+		    cellLatest.appendChild(document.createTextNode(sec));
+		    cellCount.appendChild(document.createTextNode(cnt));
 
 		    rowData.appendChild(cellNum);
 		    rowData.appendChild(cellWord);
-		    rowData.appendChild(cellSec);
+		    rowData.appendChild(cellCount);
+		    rowData.appendChild(cellLatest);
 
 		    tbody.appendChild(rowData);
 		}
