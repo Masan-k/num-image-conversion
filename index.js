@@ -13,7 +13,6 @@ let eBtn90;
 let eBtnView;
 
 let eBtnRandom;
-let eBtnAll;
 
 let eRdoInput;
 let eRdoMode;
@@ -232,7 +231,6 @@ window.onload = function () {
     eBtn90 = document.getElementById("btn90");
 
     eBtnRandom = document.getElementById("btnRandom");
-    eBtnAll = document.getElementById("btnAll");
     eBtnView = document.getElementById('btnView');
 
     eBtnView.addEventListener("click", clickBtnView, false);
@@ -248,7 +246,6 @@ window.onload = function () {
     eBtn80.addEventListener("click", clickBtnNum, false);
     eBtn90.addEventListener("click", clickBtnNum, false);
     eBtnRandom.addEventListener("click", clickBtnNum, false);
-    eBtnAll.addEventListener("click", clickBtnNum, false);
     
     //---
     //DB
