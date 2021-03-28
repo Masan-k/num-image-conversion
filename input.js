@@ -98,9 +98,7 @@ function clickBtnMenuInput(){
     clickBtnMenu('input');
 }
 window.onload = function () {
-    
     'use strict';
-    
     
     //---
     //DB
