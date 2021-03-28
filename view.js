@@ -32,7 +32,7 @@ window.onload = function () {
     //================
     //REGISTERED DATA
     //================
-    const body = document.getElementsByTagName("body")[0];
+    const div = document.getElementById('viewTable');
     const tbl = document.createElement("table");
     
     const rowHead = document.createElement("tr");
@@ -140,11 +140,13 @@ window.onload = function () {
 		    maxLogDate = rec[i].log_date;
 		    sec = rec[i].sec;
 		}
-		if(worstSec < rec[i].sec){worstSec = rec[i].sec;}
-		if(bestSec > rec[i].sec){bestSec = rec[i].sec;}
 
-		sumSec += sec;
-		cnt += 1;
+		if(cnt <= 3){
+		    if(worstSec < rec[i].sec ){worstSec = rec[i].sec;}
+		    if(bestSec > rec[i].sec){bestSec = rec[i].sec;}
+		    sumSec += sec;
+		}
+	        cnt += 1;
 	    }
 	}
 	recordNum.push(num);
@@ -192,7 +194,11 @@ window.onload = function () {
 			if(rec.num === recordNum[i]){
 			    sec = Math.round(latestSec[i] * Math.pow(10, 1)) / Math.pow(10,1);
 			    cnt = recordCount[i];
-			    avgSec = recordSumSec[i] / cnt;
+			    if(cnt <= 3){
+				avgSec = recordSumSec[i] / cnt;
+			    }else{
+				avgSec = recordSumSec[i] / 3;
+			    }
 			    avgSec = Math.round(avgSec * Math.pow(10, 1)) / Math.pow(10,1);
 			    wstSec = Math.round(recordWorstSec[i] * Math.pow(10, 1)) / Math.pow(10,1);
 			    bstSec = Math.round(recordBestSec[i] * Math.pow(10, 1)) / Math.pow(10,1);   
@@ -227,8 +233,8 @@ window.onload = function () {
    
 	tbl.appendChild(thead);
 	tbl.appendChild(tbody);
-	body.appendChild(tbl);
-
+	div.appendChild(tbl);
+	
     }).catch((error)=>{console.log(error);})
 	
 }
