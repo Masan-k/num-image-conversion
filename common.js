@@ -1,20 +1,25 @@
 function getDexie(){
+    'use strict';
     return new Dexie('num-image-conversion');
 }
 
 function getDbColPlayLog(){
+    'use strict';
     return  "&log_date, mode, range_index";
 }
 
 function getDbColInput(){
+    'use strict';
     return  "&num, word, log_date";
 }
 
 function getDbColInputBack(){
+    'use strict';
     return "++id, num, log_date, word, insert_date";
 }
 
 function getDbColTest(){
+    'use strict';
     return "++id, num, log_date, word, sec";
 }
 
@@ -32,12 +37,14 @@ function getLogdate(){
     return year + month + day + '_' + hour + minute + second;
 }
 
-function clickBtnMenu(){
+function clickBtnMenu(mode){
     'use strict';
     
-    window.location.href = 'index.html';
-    //window.location.href = 'https://masan-k.github.io/num-image-conversion/'
-    
+    if(typeof mode === "object"){
+	window.location.href = 'index.html';
+    }else{
+	window.location.href = 'index.html?mode=' + mode;
+    }
 }
 
 function to2Digit(num){

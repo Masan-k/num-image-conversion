@@ -7,12 +7,15 @@ window.addEventListener('DOMContentLoaded', function() {
     el.src = "common.js";
     document.body.appendChild(el);
 })
-
+function clickBtnMenuView(){
+    'use strict';
+    clickBtnMenu('view');
+}
 window.onload = function () {
     'use strict';
 
     let eBtnMenu = document.getElementById("btnMenu");
-    eBtnMenu.addEventListener("click", clickBtnMenu, false);
+    eBtnMenu.addEventListener("click", clickBtnMenuView, false);
 
     //===
     //DB

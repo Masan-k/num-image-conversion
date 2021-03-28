@@ -93,7 +93,12 @@ window.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(el);
 
 })
+function clickBtnMenuInput(){
+    'use strict';
+    clickBtnMenu('input');
+}
 window.onload = function () {
+    
     'use strict';
     
     
@@ -118,7 +123,7 @@ window.onload = function () {
     //event
     document.body.onkeyup = keyInput;
     eBtnEntry.addEventListener("click", clickBtnEntry, false);
-    eBtnMenu.addEventListener("click", clickBtnMenu, false);
+    eBtnMenu.addEventListener("click", clickBtnMenuInput, false);
 
     //-----------
     //form init

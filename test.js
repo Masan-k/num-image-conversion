@@ -269,6 +269,10 @@ function keyInput() {
         clickBtnEntry();
     }
 }
+function clickBtnMenuTest(){
+    'use strict';
+    clickBtnMenu('test');
+}
 let db;
 window.onload = function () {
     'use strict';
@@ -292,7 +296,7 @@ window.onload = function () {
     eBtnMenu= document.getElementById("btnMenu");
     eBtnPass.addEventListener("click", clickBtnPass, false);
     eBtnEntry.addEventListener("click", clickBtnEntry, false);
-    eBtnMenu.addEventListener("click", clickBtnMenu, false);
+    eBtnMenu.addEventListener("click", clickBtnMenuTest, false);
     eBtnStart.addEventListener("click", clickBtnStart, false);
 
     //--------------

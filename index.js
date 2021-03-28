@@ -16,6 +16,7 @@ let eBtnRandom;
 
 let eRdoInput;
 let eRdoMode;
+let eRdoTest;
 
 function clickBtnView(){
     window.location.href = 'view.html';
@@ -212,13 +213,12 @@ function drawCtxLastYear() {
 
 
 window.onload = function () {
-
     'use strict';
          
     eRdoMode = document.getElementsByName("rdoMode");
     eRdoInput = document.getElementById("rdoInput");
-    eRdoInput.checked = true ;
-    
+    eRdoTest = document.getElementById("rdoTest");
+
     eBtn00 = document.getElementById("btn00");
     eBtn10 = document.getElementById("btn10");
     eBtn20 = document.getElementById("btn20");
@@ -257,7 +257,22 @@ window.onload = function () {
 	input_back: getDbColInputBack(),
 	test: getDbColTest()
     });
-	
+
+    let param = location.search.split('=')
+    let mode = null
+    if(param.length === 2){
+	mode = param[1]
+    }
+    if(mode === 'test'){
+	eRdoTest.checked = true;
+    }else if(mode === 'view'){
+	eRdoTest.checked = true;
+    }else if(mode === 'input'){
+	eRdoInput.checked = true;
+    }else{
+	eRdoTest.checked = true;
+    }
+
     drawCtxLastYear();
 }
 
