@@ -133,7 +133,7 @@ function setClear() {
 
     let answer = '';
     for(let i in missNumber){
-        answer = answer + missAnswer[i] + '(' + missNumber[i] + ')' + '\n';
+        answer = answer + to2Digit(missAnswer[i]) + '(' + to2Digit(missNumber[i]) + ')' + '\n';
     }
     eLblMissAnswer.innerText = answer
 
