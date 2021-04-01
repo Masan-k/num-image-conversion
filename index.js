@@ -41,26 +41,48 @@ function clickBtnNum() {
     if(mode === 'input' && (rangeIndex === 'random' || rangeIndex === 'all')){
         alert('When "input" is selected in the mode, select "number" as the target.');
 	return;
+	
     }else if(mode === 'test'){
-    
+	
 	let fromNumber = parseInt(rangeIndex) * 10;
 	let wordCount
 	
 	wordCount = 10;
 	let toNumber = fromNumber + wordCount;
 
-	db.input.where("num")
-	    .between(fromNumber, toNumber)
-	    .toArray()
-	    .then((rec)=>{
-	        if(rec.length  === 10){
-	            window.location.href = mode + '.html?rangeIndex=' + rangeIndex;
-		}else{
-		    console.log('[errorlog] rec.length -> ' + rec.length);
-		    alert("There is no target registration. Please enter before the test.");
-		}
-	    })
-	    .catch((error)=>{console.log(error);});
+	let randomPrams = rangeIndex.split(',');
+	console.log(randomPrams);
+
+	if(randomPrams[0] !== 'random'){
+
+	    db.input.where("num")
+		.between(fromNumber, toNumber)
+		.toArray()
+		.then((rec)=>{
+		    if(rec.length  === 10){
+			window.location.href = mode + '.html?rangeIndex=' + rangeIndex;
+		    }else{
+			console.log('[errorlog] rec.length -> ' + rec.length);
+			alert("There is no target registration. Please enter before the test.");
+		    }
+		})
+		.catch((error)=>{console.log(error);});
+	    
+	}else{
+	    
+	    db.input
+		.toArray()
+		.then((rec)=>{
+		    if(rec.length  >= parseInt(randomPrams[1])){
+			window.location.href = mode + '.html?rangeIndex=' + rangeIndex;
+		    }else{
+			console.log('[errorlog] rec.length -> ' + rec.length);
+			alert("There is no target registration. Please enter before the test.");
+		    }
+		})
+		.catch((error)=>{console.log(error);});
+	    
+	    }
 
     }else{
 	window.location.href = mode + '.html?rangeIndex=' + rangeIndex;

@@ -92,72 +92,13 @@ window.onload = function () {
     
     thead.appendChild(rowHead);
     thead.appendChild(rowHeadSub);
+ 
+    let record = new Object();
     
-    //----------------
-    //getLatestRecord
-    //----------------
-
-    let recordNum = [];
-    let recordCount = [];
-    let latestSec = [];
-    let recordSumSec = [];
-    let recordWorstSec = [];
-    let recordBestSec = [];
-
-    let maxLogDate;
-    let num = -1;
-    let sec = -1;
-    let cnt = 1;
-    let sumSec = 0; //use average!
-    let worstSec = -1;
-    let bestSec = 9999;
-
     //Search for "-1" to use "SortBy"
-    db.test.where('num').above(-1).sortBy('num').then((rec)=>{
+    db.test.where('num').above(-1).reverse().sortBy('log_date').then((rec)=>{
+	record = getRecordSummary(rec);
 
-	for(let i in rec){
-	    if(num !== -1 && num !== rec[i].num){
-		recordNum.push(num);
-		recordCount.push(cnt);
-		
-		latestSec.push(sec);
-		recordSumSec.push(sumSec);
-		recordWorstSec.push(worstSec);
-		recordBestSec.push(bestSec);
-	    }
-
-	    if(num !== rec[i].num){
-		num = rec[i].num;
-		maxLogDate = rec[i].log_date;
-		sec = rec[i].sec;
-
-		worstSec = sec;
-		bestSec = sec;
-		sumSec = sec;
-		cnt = 1;
-	    }else{
-		if(maxLogDate < rec[i].log_date){
-		    maxLogDate = rec[i].log_date;
-		    sec = rec[i].sec;
-		}
-
-		if(cnt <= 3){
-		    if(worstSec < rec[i].sec ){worstSec = rec[i].sec;}
-		    if(bestSec > rec[i].sec){bestSec = rec[i].sec;}
-		    sumSec += sec;
-		}
-	        cnt += 1;
-	    }
-	}
-	recordNum.push(num);
-	
-	recordSumSec.push(sumSec)
-	latestSec.push(sec);
-
-	recordWorstSec.push(worstSec);
-	recordBestSec.push(bestSec);
-
-	recordCount.push(cnt);
     }).then(() =>{
 
 	//------------
@@ -189,19 +130,20 @@ window.onload = function () {
 		    let avgSec = '-';
 		    let wstSec = '-';
 		    let bstSec = '-';
-		    for(let i in recordNum){
 
-			if(rec.num === recordNum[i]){
-			    sec = Math.round(latestSec[i] * Math.pow(10, 1)) / Math.pow(10,1);
-			    cnt = recordCount[i];
+		    for(let i in record.num){
+
+			if(rec.num === record.num[i]){
+			    sec = Math.round(record.latestSec[i] * Math.pow(10, 1)) / Math.pow(10,1);
+			    cnt = record.count[i];
 			    if(cnt <= 3){
-				avgSec = recordSumSec[i] / cnt;
+				avgSec = record.sumSec[i] / cnt;
 			    }else{
-				avgSec = recordSumSec[i] / 3;
+				avgSec = record.sumSec[i] / 3;
 			    }
 			    avgSec = Math.round(avgSec * Math.pow(10, 1)) / Math.pow(10,1);
-			    wstSec = Math.round(recordWorstSec[i] * Math.pow(10, 1)) / Math.pow(10,1);
-			    bstSec = Math.round(recordBestSec[i] * Math.pow(10, 1)) / Math.pow(10,1);   
+			    wstSec = Math.round(record.worstSec[i] * Math.pow(10, 1)) / Math.pow(10,1);
+			    bstSec = Math.round(record.bestSec[i] * Math.pow(10, 1)) / Math.pow(10,1);   
 			    break;
 
 			}

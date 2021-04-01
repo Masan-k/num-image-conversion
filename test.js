@@ -80,7 +80,6 @@ function getShuffle(rec){
     let newRecord = [];
     let maxIndex;
     let randomIndex;
-    let newRec;
 
     while(newRecord.length < rec.length){
         maxIndex = workRecord.length - 1;
@@ -91,17 +90,50 @@ function getShuffle(rec){
     return newRecord;
 
 }
+function loadCorrectAnswerRandom(qCount){
+    console.log('call loacCorrect Random');
+    console.log('qCount => ' + qCount);
+    //ワースト10、アベレージ10、テスト回数が少ないもの10
 
-function loadCorrectAnswer(rangeId){
+     //Search for "-1" to use "SortBy"
+//    db.test.where('num').above(-1).sortBy('num').reverse.then((rec)=>{
+    db.test.where('log_date').above(-1).reverse().sortBy('log_date').then((rec)=>{
+
+	rec = getSortNum(rec)
+	rec = getRecordSummary(rec)
+	
+	let worstCount = qCount / 3;
+	let avgCount = qCount / 3;
+	let testCount = qCount / 3;
+	
+	let newRec = [];
+	let workRec = Object.create(rec);
+
+	let worstNum = [];
+	let avgNum = [];
+
+
+	for(let i in rec.num){
+	    console.log(rec.num[i]);
+	    //console.log(rec.num[i] + ':' + rec.log_date[i] + ':' + rec.sec[i]);
+	}
+	
+    }).catch((error)=>{console.log(error);})
+
+}
+
+
+function loadCorrectAnswer(startNum){
     'use strict';
+    
     db.input.where("num")
-    	.between(parseInt(rangeId), parseInt(rangeId) + 10)
+    	.between(parseInt(startNum), parseInt(startNum) + 10)
 	.toArray()
 	.then((rec)=>{
            if(rec === undefined){
 	        alert("This is an error. I couldn't get the answer.");
 	    }else{
-	        answers = getShuffle(rec);
+		answers = getShuffle(rec);
 	    }
 	})
 	.catch((error)=>{console.log(error);});
@@ -250,6 +282,7 @@ function clickBtnEntry(){
         missAnswer.push(eTxtInput.value);
     }
 }
+
 window.addEventListener('DOMContentLoaded', function() {
     'use strict';
     let el = document.createElement("script");
@@ -307,7 +340,8 @@ window.onload = function () {
     db.version(4).stores({
 	play_log: getDbColPlayLog(),
 	input: getDbColInput(),
-	test: getDbColTest()
+	test: getDbColTest(),
+	input_back: getDbColInputBack()
     });
     
     //--------------
@@ -316,9 +350,14 @@ window.onload = function () {
     let param = location.search.split('=')
     if(param.length !== 2){
 	alert('There are no parameters in the URL. Please start from the menu.');
-    }else{
+    }else if(isFinite(param[1])){
 	startNumber = param[1] * 10;
 	loadCorrectAnswer(startNumber);
+    }else{
+	//console.log('param >>> ' + param[1]);
+	let questionCount = param[1].split(',')[1]
+	//console.log('questionCount -> ' + questionCount);
+	loadCorrectAnswerRandom(questionCount);
     }
 
     init();

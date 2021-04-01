@@ -23,6 +23,95 @@ function getDbColTest(){
     return "++id, num, log_date, word, sec";
 }
 
+function getSortNum(rec){
+
+    let workRec = rec.slice();
+    let newRec = [];
+    let minNumIndex = -1;
+
+    while(newRec.length < rec.length){
+       
+	let minNum = 9999;
+
+	for(let i in workRec){
+	    if(workRec[i].num <  minNum){
+		minNum = workRec[i].num;
+		minNumIndex = i;
+	    }
+	}
+	newRec.push(workRec[minNumIndex]);
+	workRec.splice(minNumIndex, 1)
+    }
+    return newRec;
+}
+
+function getRecordSummary(rec){
+    //----------------
+    //Sumary Record
+    //----------------
+    let recordNum = [];
+    let recordCount = [];
+    let recordLatestSec = [];
+    let recordSumSec = [];
+    let recordWorstSec = [];
+    let recordBestSec = [];
+
+    let maxLogDate;
+    let num = -1;
+    let sec = -1;
+    let cnt = 1;
+    let sumSec = 0; //use average!
+    let worstSec = -1;
+    let bestSec = 9999;
+
+    rec = getSortNum(rec);
+
+    for(let i in rec){
+	if(num !== -1 && num !== rec[i].num){
+	    recordNum.push(num);
+	    recordCount.push(cnt);
+	    
+	    recordLatestSec.push(sec);
+	    recordSumSec.push(sumSec);
+	    recordWorstSec.push(worstSec);
+	    recordBestSec.push(bestSec);
+	}
+
+	if(num !== rec[i].num){
+	    num = rec[i].num;
+	    maxLogDate = rec[i].log_date;
+	    sec = rec[i].sec;
+
+	    worstSec = sec;
+	    bestSec = sec;
+	    sumSec = sec;
+	    cnt = 1;
+	}else{
+	    if(maxLogDate < rec[i].log_date){
+		maxLogDate = rec[i].log_date;
+		sec = rec[i].sec;
+	    }
+
+	    if(cnt <= 3){
+		if(worstSec < rec[i].sec ){worstSec = rec[i].sec;}
+		if(bestSec > rec[i].sec){bestSec = rec[i].sec;}
+		sumSec += sec;
+	    }
+	    cnt += 1;
+	}
+    }
+    
+    let record = {num: recordNum
+		  ,sumSec: recordSumSec
+		  ,worstSec: recordWorstSec
+		  ,bestSec: recordBestSec
+		  ,count:   recordCount
+	          ,latestSec: recordLatestSec
+		 }
+
+    return record;
+}
+
 function getLogdate(){
      'use strict';
 
