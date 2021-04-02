@@ -213,8 +213,6 @@ function loadCorrectAnswerRandom(qCount){
 	    .catch((error)=>{console.log(error);});
 
     }).catch((error)=>{console.log(error);})
-
-
 }
 
 
@@ -260,7 +258,7 @@ function setClear() {
 
     let answer = '';
     for(let i in missNumber){
-        answer = answer + to2Digit(missAnswer[i]) + '(' + to2Digit(missNumber[i]) + ')' + '\n';
+	answer = answer + missAnswer[i] + '(' + to2Digit(missNumber[i]) + ')' + '\n';
     }
     eLblMissAnswer.innerText = answer
 
@@ -270,7 +268,7 @@ function clickBtnPass() {
     'use strict';
 
     missNumber.push(answers[currentIndex].num);
-    missAnswer.push('none');
+    missAnswer.push('NO ANSWER');
     
     eTxtInput.value = '';
 
