@@ -91,34 +91,129 @@ function getShuffle(rec){
 
 }
 function loadCorrectAnswerRandom(qCount){
-    console.log('call loacCorrect Random');
-    console.log('qCount => ' + qCount);
-    //ワースト10、アベレージ10、テスト回数が少ないもの10
 
      //Search for "-1" to use "SortBy"
-//    db.test.where('num').above(-1).sortBy('num').reverse.then((rec)=>{
     db.test.where('log_date').above(-1).reverse().sortBy('log_date').then((rec)=>{
 
-	rec = getSortNum(rec)
-	rec = getRecordSummary(rec)
-	
+	//for(let i in rec){ console.log(rec[i].num + ':' + rec[i].sec);}
+	let sortRec = getSortNum(rec)
+	let sumRec = getRecordSummary(sortRec)
+
+	//Error if the number tested is less than the specified number.
+	if(sumRec.length < qCount){
+	    alert('This is an error. The number tested is less than or equal to the specified number.');
+	    return;
+	}
 	let worstCount = qCount / 3;
 	let avgCount = qCount / 3;
 	let testCount = qCount / 3;
 	
-	let newRec = [];
-	let workRec = Object.create(rec);
+	let workRec = Object.create(sumRec);
 
-	let worstNum = [];
-	let avgNum = [];
+	let questionNum = [];
+	let questionSec = []; //test code
 
+        //-------------------------------------------
+	//get max average
+        //-------------------------------------------
+	let writeCount = 0;
+	while(writeCount < avgCount){
+	    
+	    let maxSec = -1;
+	    let maxIndex = -1;
 
-	for(let i in rec.num){
-	    console.log(rec.num[i]);
-	    //console.log(rec.num[i] + ':' + rec.log_date[i] + ':' + rec.sec[i]);
+	    for(let i in workRec.num){
+		let avgSec = workRec.sumSec[i] / workRec.count[i]; 
+		if(avgSec > maxSec){
+		    maxIndex = i;
+		    maxSec = avgSec;
+		}
+	    }
+
+	    questionNum.push(workRec.num[maxIndex]);
+	    questionSec.push(maxSec);
+
+	    workRec.num.splice(maxIndex, 1);
+	    workRec.sumSec.splice(maxIndex, 1);
+	    workRec.worstSec.splice(maxIndex, 1);
+	    workRec.bestSec.splice(maxIndex, 1);
+	    workRec.count.splice(maxIndex, 1);
+	    workRec.latestSec.splice(maxIndex, 1);   
+
+	    writeCount += 1
+	}
+        //-------------------------------------------
+	//get max worst
+        //-------------------------------------------
+	writeCount = 0;
+	while(writeCount < avgCount){
+	    
+	    let maxSec = -1;
+	    let maxIndex = -1;
+
+	    for(let i in workRec.num){
+		if(workRec.worstSec[i] > maxSec){
+		    maxIndex = i;
+		    maxSec = workRec.worstSec[i] ;
+		}
+	    }
+
+	    questionNum.push(workRec.num[maxIndex]);
+	    questionSec.push(maxSec);
+
+	    workRec.num.splice(maxIndex, 1);
+	    workRec.sumSec.splice(maxIndex, 1);
+	    workRec.worstSec.splice(maxIndex, 1);
+	    workRec.bestSec.splice(maxIndex, 1);
+	    workRec.count.splice(maxIndex, 1);
+	    workRec.latestSec.splice(maxIndex, 1);   
+
+	    writeCount += 1
 	}
 	
+        //-------------------------------------------
+	//Get the one with the least number of tests
+        //-------------------------------------------
+	writeCount = 0;
+	while(writeCount < testCount){
+	    
+	    let minCount = 9999999;
+	    let minIndex = -1;
+
+	    for(let i in workRec.num){
+		if(workRec.count[i] < minCount){
+		    minIndex = i;
+		    minCount = workRec.count[i] ;
+		}
+	    }
+
+	    questionNum.push(workRec.num[minIndex]);
+	    questionSec.push(minCount);
+
+	    workRec.num.splice(minIndex, 1);
+	    workRec.sumSec.splice(minIndex, 1);
+	    workRec.worstSec.splice(minIndex, 1);
+	    workRec.bestSec.splice(minIndex, 1);
+	    workRec.count.splice(minIndex, 1);
+	    workRec.latestSec.splice(minIndex, 1);   
+
+	    writeCount += 1
+	}
+
+	db.input.bulkGet(questionNum)
+	    .then((rec)=>{
+	       if(rec === undefined){
+		    alert("This is an error. I couldn't get the answer.");
+		}else{
+		    //console.log('rec[0].num : '+ rec[0].num);
+		    //console.log('rec[1].word : ' + rec[0].word);
+		    answers = getShuffle(rec);
+		}
+	    })
+	    .catch((error)=>{console.log(error);});
+
     }).catch((error)=>{console.log(error);})
+
 
 }
 
@@ -354,9 +449,7 @@ window.onload = function () {
 	startNumber = param[1] * 10;
 	loadCorrectAnswer(startNumber);
     }else{
-	//console.log('param >>> ' + param[1]);
 	let questionCount = param[1].split(',')[1]
-	//console.log('questionCount -> ' + questionCount);
 	loadCorrectAnswerRandom(questionCount);
     }
 

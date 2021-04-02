@@ -56,15 +56,13 @@ function getRecordSummary(rec){
     let recordWorstSec = [];
     let recordBestSec = [];
 
-    let maxLogDate;
+    //let maxLogDate;
     let num = -1;
     let sec = -1;
     let cnt = 1;
     let sumSec = 0; //use average!
     let worstSec = -1;
     let bestSec = 9999;
-
-    rec = getSortNum(rec);
 
     for(let i in rec){
 	if(num !== -1 && num !== rec[i].num){
@@ -79,7 +77,6 @@ function getRecordSummary(rec){
 
 	if(num !== rec[i].num){
 	    num = rec[i].num;
-	    maxLogDate = rec[i].log_date;
 	    sec = rec[i].sec;
 
 	    worstSec = sec;
@@ -87,22 +84,25 @@ function getRecordSummary(rec){
 	    sumSec = sec;
 	    cnt = 1;
 	}else{
-	    if(maxLogDate < rec[i].log_date){
-		maxLogDate = rec[i].log_date;
-		sec = rec[i].sec;
-	    }
 
 	    if(cnt <= 3){
 		if(worstSec < rec[i].sec ){worstSec = rec[i].sec;}
 		if(bestSec > rec[i].sec){bestSec = rec[i].sec;}
-		sumSec += sec;
+		sumSec += rec[i].sec;
 	    }
 	    cnt += 1;
 	}
     }
+    recordNum.push(num);
+    recordCount.push(cnt);
     
+    recordLatestSec.push(sec);
+    recordSumSec.push(sumSec);
+    recordWorstSec.push(worstSec);
+    recordBestSec.push(bestSec);
+
     let record = {num: recordNum
-		  ,sumSec: recordSumSec
+	          ,sumSec: recordSumSec 
 		  ,worstSec: recordWorstSec
 		  ,bestSec: recordBestSec
 		  ,count:   recordCount
