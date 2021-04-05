@@ -38,7 +38,7 @@ function clickBtnNum() {
 	if(eRdoMode[i].checked){mode = eRdoMode[i].value}
     }
     let rangeIndex = event.currentTarget.dataset['index'];
-    if(mode === 'input' && (rangeIndex === 'random' || rangeIndex === 'all')){
+    if(mode === 'input' && (rangeIndex.split(',')[0] === 'random' || rangeIndex === 'all')){
         alert('When "input" is selected in the mode, select "number" as the target.');
 	return;
 	
