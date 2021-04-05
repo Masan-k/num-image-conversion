@@ -1,7 +1,6 @@
 ﻿/*globals window, document, setInterval, event , localStorage */
 
 let eBtnStart;
-let eBtnPass;
 let eBtnEntry;
 let eTxtInput;
 let eBtnMenu;
@@ -52,7 +51,6 @@ function init(){
     eTxtInput.value = '';
 
     eBtnEntry.disabled = false;
-    eBtnPass.disabled = false;
     eBtnStart.disabled = false;
 
     missNumber = [];
@@ -254,7 +252,6 @@ function setClear() {
     clearInterval(intervalId);
 
     eBtnEntry.disabled = true;
-    eBtnPass.disabled = true;
 
     let answer = '';
     for(let i in missNumber){
@@ -263,29 +260,6 @@ function setClear() {
     eLblMissAnswer.innerText = answer
 
 }
-
-function clickBtnPass() {
-    'use strict';
-
-    missNumber.push(answers[currentIndex].num);
-    missAnswer.push('NO ANSWER');
-    
-    eTxtInput.value = '';
-
-    const isTimeup = true;
-    setRecord(isTimeup);
-
-    if(currentIndex !== answers.length){
-        currentIndex += 1;
-        if(currentIndex !== answers.length){
-            setQuestion(currentIndex, correctCount);
-        }else{
-            eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
-            setClear();
-	}
-    }
-}
-
 
 function setWaitCount() {
     'use strict';
@@ -313,7 +287,25 @@ function countdown() {
     'use strict';
     waitCount -= 1;
     if(0 < waitCount){setWaitCount();}
-    else{clickBtnPass();}       
+    else{
+	missNumber.push(answers[currentIndex].num);
+	missAnswer.push('NO ANSWER');
+	
+	eTxtInput.value = '';
+
+	const isTimeup = true;
+	setRecord(isTimeup);
+
+	if(currentIndex !== answers.length){
+	    currentIndex += 1;
+	    if(currentIndex !== answers.length){
+		setQuestion(currentIndex, correctCount);
+	    }else{
+		eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
+		setClear();
+	    }
+	}
+    }       
 }
 
 function setStartTimer() {
@@ -408,7 +400,6 @@ window.onload = function () {
     eBtnStart = document.getElementById("btnStart");
     
     eBtnEntry= document.getElementById("btnEntry");
-    eBtnPass = document.getElementById("btnPass");
     eBtnMenu= document.getElementById("btnMenu");
     eTxtInput = document.getElementById("txtInput");
 
@@ -420,7 +411,6 @@ window.onload = function () {
     eLblNumberQuestions = document.getElementById("lblNumberQuestions");
  
     eBtnMenu= document.getElementById("btnMenu");
-    eBtnPass.addEventListener("click", clickBtnPass, false);
     eBtnEntry.addEventListener("click", clickBtnEntry, false);
     eBtnMenu.addEventListener("click", clickBtnMenuTest, false);
     eBtnStart.addEventListener("click", clickBtnStart, false);
