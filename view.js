@@ -85,9 +85,9 @@ window.onload = function () {
     rowHead.appendChild(cellCount);
     rowHead.appendChild(cellSec);
     
+    rowHeadSub.appendChild(cellBest);
     rowHeadSub.appendChild(cellLatest);
     rowHeadSub.appendChild(cellAverage);
-    rowHeadSub.appendChild(cellBest);
     rowHeadSub.appendChild(cellWorst);
     
     thead.appendChild(rowHead);
@@ -164,9 +164,10 @@ window.onload = function () {
 		    rowData.appendChild(cellNum);
 		    rowData.appendChild(cellWord);
 		    rowData.appendChild(cellCount);
+
+		    rowData.appendChild(cellBest);
 		    rowData.appendChild(cellLatest);
 		    rowData.appendChild(cellAverage);
-		    rowData.appendChild(cellBest);
 		    rowData.appendChild(cellWorst);
 
 		    tbody.appendChild(rowData);
