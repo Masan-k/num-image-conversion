@@ -23,13 +23,13 @@ function getDbColTest(){
     return "++id, num, log_date, word, sec";
 }
 
-function getSortNum(rec){
+function getSortNum(_rec){
 
-    let workRec = rec.slice();
+    let workRec = _rec.slice();
     let newRec = [];
     let minNumIndex = -1;
 
-    while(newRec.length < rec.length){
+    while(newRec.length < _rec.length){
        
 	let minNum = 9999;
 
@@ -45,7 +45,7 @@ function getSortNum(rec){
     return newRec;
 }
 
-function getRecordSummary(rec){
+function getRecordSummary(_rec){
     //----------------
     //Sumary Record
     //----------------
@@ -64,8 +64,8 @@ function getRecordSummary(rec){
     let worstSec = -1;
     let bestSec = 9999;
 
-    for(let i in rec){
-	if(num !== -1 && num !== rec[i].num){
+    for(let i in _rec){
+	if(num !== -1 && num !== _rec[i].num){
 	    recordNum.push(num);
 	    recordCount.push(cnt);
 	    
@@ -75,9 +75,9 @@ function getRecordSummary(rec){
 	    recordBestSec.push(bestSec);
 	}
 
-	if(num !== rec[i].num){
-	    num = rec[i].num;
-	    sec = rec[i].sec;
+	if(num !== _rec[i].num){
+	    num = _rec[i].num;
+	    sec = _rec[i].sec;
 
 	    worstSec = sec;
 	    bestSec = sec;
@@ -86,9 +86,9 @@ function getRecordSummary(rec){
 	}else{
 
 	    if(cnt <= 3){
-		if(worstSec < rec[i].sec ){worstSec = rec[i].sec;}
-		if(bestSec > rec[i].sec){bestSec = rec[i].sec;}
-		sumSec += rec[i].sec;
+		if(worstSec < _rec[i].sec ){worstSec = _rec[i].sec;}
+		if(bestSec > _rec[i].sec){bestSec = _rec[i].sec;}
+		sumSec += _rec[i].sec;
 	    }
 	    cnt += 1;
 	}
@@ -101,7 +101,7 @@ function getRecordSummary(rec){
     recordWorstSec.push(worstSec);
     recordBestSec.push(bestSec);
 
-    let record = {num: recordNum
+    let result = {num: recordNum
 	          ,sumSec: recordSumSec 
 		  ,worstSec: recordWorstSec
 		  ,bestSec: recordBestSec
@@ -109,7 +109,7 @@ function getRecordSummary(rec){
 	          ,latestSec: recordLatestSec
 		 }
 
-    return record;
+    return result;
 }
 
 function getLogdate(){

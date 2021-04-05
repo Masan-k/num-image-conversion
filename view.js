@@ -97,10 +97,10 @@ window.onload = function () {
     
     //Search for "-1" to use "SortBy"
     db.test.where('num').above(-1).reverse().sortBy('log_date').then((rec)=>{
+	rec = getSortNum(rec);
 	record = getRecordSummary(rec);
 
     }).then(() =>{
-
 	//------------
 	//table(body)
 	//------------
@@ -132,6 +132,7 @@ window.onload = function () {
 		    let bstSec = '-';
 
 		    for(let i in record.num){
+
 
 			if(rec.num === record.num[i]){
 			    sec = Math.round(record.latestSec[i] * Math.pow(10, 1)) / Math.pow(10,1);
