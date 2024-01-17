@@ -15,6 +15,9 @@ function keyInput() {
     if(event.keyCode === KEYCODE_ENTER) {
         clickBtnEntry();
     }
+    if(event.keyCode === 9){ //9:tab
+      clickBtnMenuInput();
+    }
 }
 
 function saveScore(){

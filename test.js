@@ -382,9 +382,9 @@ function keyInput() {
     console.log(event.keyCode);
     
     if(event.keyCode === 9){ //9:tab
-      clickBtnStart();
+      clickBtnMenuTest();
     }
-    if(event.keyCode === 32){ //32:space
+    if(event.keyCode === 17){ //17:Ctrl
       clickBtnStart();
     }
 
