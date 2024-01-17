@@ -379,6 +379,15 @@ window.addEventListener('DOMContentLoaded', function() {
 function keyInput() {
     'use strict';
     const KEYCODE_ENTER = 13;
+    console.log(event.keyCode);
+    
+    if(event.keyCode === 9){ //9:tab
+      clickBtnStart();
+    }
+    if(event.keyCode === 32){ //32:space
+      clickBtnStart();
+    }
+
     if(currentIndex >= answers.length){
         return;
     }

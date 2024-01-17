@@ -233,9 +233,36 @@ function drawCtxLastYear() {
 	});
 }
 
-
+function keyInput() {
+   'use strict';
+   console.log(event.keyCode);
+   let e = new Event('click');
+   if(event.keyCode >=48 && event.keyCode <=57){
+     let target;
+     if(event.keyCode === 48){target = document.getElementById('btn00');} 
+     if(event.keyCode === 49){target = document.getElementById('btn10');} 
+     if(event.keyCode === 50){target = document.getElementById('btn20');} 
+     if(event.keyCode === 51){target = document.getElementById('btn30');} 
+     if(event.keyCode === 52){target = document.getElementById('btn40');} 
+     if(event.keyCode === 53){target = document.getElementById('btn50');} 
+     if(event.keyCode === 54){target = document.getElementById('btn60');} 
+     if(event.keyCode === 55){target = document.getElementById('btn70');} 
+     if(event.keyCode === 56){target = document.getElementById('btn80');} 
+     if(event.keyCode === 57){target = document.getElementById('btn90');} 
+     target.dispatchEvent(e);
+   }
+   if(event.keyCode === 84){
+     let elements = document.getElementsByName('rdoMode');
+     elements[0].checked = true;
+   }
+   if(event.keyCode === 73){
+     let elements = document.getElementsByName('rdoMode');
+     elements[1].checked = true;
+   }
+}
 window.onload = function () {
     'use strict';
+    document.body.onkeyup = keyInput;
          
     eRdoMode = document.getElementsByName("rdoMode");
     eRdoInput = document.getElementById("rdoInput");
