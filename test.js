@@ -334,12 +334,14 @@ function setRecord(isTimeup){
 
 function clickBtnStart() {
     'use strict';
+    
     setQuestion(currentIndex, correctCount);
     intervalId = setInterval(countdown, 1000);
 
     eBtnStart.disabled = true;
     eLblStatus.innerText = 'Please enter the answer';
 
+    document.getElementById("txtInput").focus();
     setStartTimer();
 }
 
