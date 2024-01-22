@@ -19,6 +19,7 @@ let currentIndex;
 let currentCorrect;
 let missNumber = [];
 let missAnswer = [];
+let correctAnswer = [];
 let correctCount;
 let intervalId;
 
@@ -33,65 +34,64 @@ let recStartTime;
 let startNumber;
 
 function init(){
-    'use strict';
-    currentIndex = 0;
-    correctCount = 0;
-    waitCount = WAIT_MAX_COUNT;
+  'use strict';
+  currentIndex = 0;
+  correctCount = 0;
+  waitCount = WAIT_MAX_COUNT;
 
-    setWaitCount();
+  setWaitCount();
 
-    eLblCorrectCount.innerText = '0';
-    eLblMissAnswer.innerText = 'none';
+  eLblCorrectCount.innerText = '0';
+  eLblMissAnswer.innerText = 'none';
 
-    eLblNumber.innerText = 'XX'; 
-    eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
-    
+  eLblNumber.innerText = 'XX'; 
+  eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
+  
 
-    eLblStatus.innerText = 'Waiting for start';
-    eTxtInput.value = '';
+  eLblStatus.innerText = 'Waiting for start';
+  eTxtInput.value = '';
 
-    eBtnEntry.disabled = false;
-    eBtnStart.disabled = false;
+  eBtnEntry.disabled = false;
+  eBtnStart.disabled = false;
 
-    missNumber = [];
-    missAnswer = [];
+  missNumber = [];
+  missAnswer = [];
+  correctAnswer = [];
 
-    recWord = [];
-    recSec = [];
-    recNum = [];
+  recWord = [];
+  recSec = [];
+  recNum = [];
 }
-
 
 function getRandom(min, max) {
-    'use strict';
-    
-    let range = max - min + 1;
-    let ramdomRange = Math.floor(Math.random() * range);
-    let randomNum = ramdomRange + min;
-    return randomNum;
+  'use strict';
+  
+  let range = max - min + 1;
+  let ramdomRange = Math.floor(Math.random() * range);
+  let randomNum = ramdomRange + min;
+  return randomNum;
 }
-
 
 function getShuffle(rec){
-    'use strict';
-    let workRecord = rec.slice();
-    let newRecord = [];
-    let maxIndex;
-    let randomIndex;
+  'use strict';
+  let workRecord = rec.slice();
+  let newRecord = [];
+  let maxIndex;
+  let randomIndex;
 
-    while(newRecord.length < rec.length){
-        maxIndex = workRecord.length - 1;
-        randomIndex = getRandom(0, maxIndex);
-        newRecord.push(workRecord[randomIndex]);
-        workRecord.splice(randomIndex, 1);
-    }
-    return newRecord;
-
+  while(newRecord.length < rec.length){
+    maxIndex = workRecord.length - 1;
+    randomIndex = getRandom(0, maxIndex);
+    newRecord.push(workRecord[randomIndex]);
+    workRecord.splice(randomIndex, 1);
+  }
+  return newRecord;
 }
+
 function loadCorrectAnswerRandom(qCount){
 
-     //Search for "-1" to use "SortBy"
-    db.test.where('log_date').above(-1).reverse().sortBy('log_date').then((rec)=>{
+   //Search for "-1" to use "SortBy"
+  db.test.where('log_date').above(-1).reverse().sortBy('log_date').then((rec)=>{
 
 	//for(let i in rec){ console.log(rec[i].num + ':' + rec[i].sec);}
 	let sortRec = getSortNum(rec)
@@ -99,8 +99,8 @@ function loadCorrectAnswerRandom(qCount){
 
 	//Error if the number tested is less than the specified number.
 	if(sumRec.length < qCount){
-	    alert('This is an error. The number tested is less than or equal to the specified number.');
-	    return;
+    alert('This is an error. The number tested is less than or equal to the specified number.');
+    return;
 	}
 	let worstCount = qCount / 3;
 	let avgCount = qCount / 3;
@@ -111,91 +111,91 @@ function loadCorrectAnswerRandom(qCount){
 	let questionNum = [];
 	let questionSec = []; //test code
 
-        //-------------------------------------------
+  //-------------------------------------------
 	//get max average
-        //-------------------------------------------
+  //-------------------------------------------
 	let writeCount = 0;
 	while(writeCount < avgCount){
 	    
-	    let maxSec = -1;
-	    let maxIndex = -1;
+    let maxSec = -1;
+    let maxIndex = -1;
 
-	    for(let i in workRec.num){
-		let avgSec = workRec.sumSec[i] / workRec.count[i]; 
-		if(avgSec > maxSec){
+    for(let i in workRec.num){
+      let avgSec = workRec.sumSec[i] / workRec.count[i]; 
+      if(avgSec > maxSec){
 		    maxIndex = i;
 		    maxSec = avgSec;
-		}
-	    }
+      }
+    }
 
-	    questionNum.push(workRec.num[maxIndex]);
-	    questionSec.push(maxSec);
+    questionNum.push(workRec.num[maxIndex]);
+    questionSec.push(maxSec);
 
-	    workRec.num.splice(maxIndex, 1);
-	    workRec.sumSec.splice(maxIndex, 1);
-	    workRec.worstSec.splice(maxIndex, 1);
-	    workRec.bestSec.splice(maxIndex, 1);
-	    workRec.count.splice(maxIndex, 1);
-	    workRec.latestSec.splice(maxIndex, 1);   
+    workRec.num.splice(maxIndex, 1);
+    workRec.sumSec.splice(maxIndex, 1);
+    workRec.worstSec.splice(maxIndex, 1);
+    workRec.bestSec.splice(maxIndex, 1);
+    workRec.count.splice(maxIndex, 1);
+    workRec.latestSec.splice(maxIndex, 1);   
 
-	    writeCount += 1
+    writeCount += 1
 	}
-        //-------------------------------------------
+  //-------------------------------------------
 	//get max worst
-        //-------------------------------------------
+  //-------------------------------------------
 	writeCount = 0;
 	while(writeCount < avgCount){
 	    
-	    let maxSec = -1;
-	    let maxIndex = -1;
+    let maxSec = -1;
+    let maxIndex = -1;
 
-	    for(let i in workRec.num){
-		if(workRec.worstSec[i] > maxSec){
-		    maxIndex = i;
-		    maxSec = workRec.worstSec[i] ;
-		}
-	    }
+    for(let i in workRec.num){
+      if(workRec.worstSec[i] > maxSec){
+        maxIndex = i;
+        maxSec = workRec.worstSec[i] ;
+      }
+    }
 
-	    questionNum.push(workRec.num[maxIndex]);
-	    questionSec.push(maxSec);
+    questionNum.push(workRec.num[maxIndex]);
+    questionSec.push(maxSec);
 
-	    workRec.num.splice(maxIndex, 1);
-	    workRec.sumSec.splice(maxIndex, 1);
-	    workRec.worstSec.splice(maxIndex, 1);
-	    workRec.bestSec.splice(maxIndex, 1);
-	    workRec.count.splice(maxIndex, 1);
-	    workRec.latestSec.splice(maxIndex, 1);   
+    workRec.num.splice(maxIndex, 1);
+    workRec.sumSec.splice(maxIndex, 1);
+    workRec.worstSec.splice(maxIndex, 1);
+    workRec.bestSec.splice(maxIndex, 1);
+    workRec.count.splice(maxIndex, 1);
+    workRec.latestSec.splice(maxIndex, 1);   
 
-	    writeCount += 1
+    writeCount += 1
 	}
 	
-        //-------------------------------------------
+  //-------------------------------------------
 	//Get the one with the least number of tests
-        //-------------------------------------------
+  //-------------------------------------------
 	writeCount = 0;
 	while(writeCount < testCount){
 	    
-	    let minCount = 9999999;
-	    let minIndex = -1;
+    let minCount = 9999999;
+    let minIndex = -1;
 
-	    for(let i in workRec.num){
-		if(workRec.count[i] < minCount){
+    for(let i in workRec.num){
+      if(workRec.count[i] < minCount){
 		    minIndex = i;
 		    minCount = workRec.count[i] ;
-		}
-	    }
+      }
+    }
 
-	    questionNum.push(workRec.num[minIndex]);
-	    questionSec.push(minCount);
+    questionNum.push(workRec.num[minIndex]);
+    questionSec.push(minCount);
 
-	    workRec.num.splice(minIndex, 1);
-	    workRec.sumSec.splice(minIndex, 1);
-	    workRec.worstSec.splice(minIndex, 1);
-	    workRec.bestSec.splice(minIndex, 1);
-	    workRec.count.splice(minIndex, 1);
-	    workRec.latestSec.splice(minIndex, 1);   
+    workRec.num.splice(minIndex, 1);
+    workRec.sumSec.splice(minIndex, 1);
+    workRec.worstSec.splice(minIndex, 1);
+    workRec.bestSec.splice(minIndex, 1);
+    workRec.count.splice(minIndex, 1);
+    workRec.latestSec.splice(minIndex, 1);   
 
-	    writeCount += 1
+    writeCount += 1
 	}
 
 	db.input.bulkGet(questionNum)
@@ -215,245 +215,241 @@ function loadCorrectAnswerRandom(qCount){
 
 
 function loadCorrectAnswer(startNum){
-    'use strict';
-    
-    db.input.where("num")
-    	.between(parseInt(startNum), parseInt(startNum) + 10)
-	.toArray()
-	.then((rec)=>{
-           if(rec === undefined){
-	        alert("This is an error. I couldn't get the answer.");
-	    }else{
-		answers = getShuffle(rec);
-	    }
-	})
+  'use strict';
+  db.input.where("num")
+    .between(parseInt(startNum), parseInt(startNum) + 10)
+    .toArray()
+    .then((rec)=>{
+     if(rec === undefined){
+       alert("This is an error. I couldn't get the answer.");
+	   }else{
+       answers = getShuffle(rec);
+	   }
+	  })
 	.catch((error)=>{console.log(error);});
 }    
 
 function saveScore(){
-    'use strict';
-    let logDate = getLogdate();
+  'use strict';
+  let logDate = getLogdate();
 
-    db.play_log.add({log_date:logDate,mode:'test',range_index:rangeIndex});
-    for(let i in recNum){
-	db.test.add({num:recNum[i], log_date:logDate, word:recWord[i], sec:recSec[i]});
-    }
+  db.play_log.add({log_date:logDate,mode:'test',range_index:rangeIndex});
+  for(let i in recNum){
+    db.test.add({num:recNum[i], log_date:logDate, word:recWord[i], sec:recSec[i]});
+  }
 }
 
 function setClear() {
-    'use strict';
-    eLblStatus.innerText = "Clear!!";
-    eLblCorrectCount.innerText = correctCount;
-    eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
-    
-    saveScore();
+  'use strict';
+  eLblStatus.innerText = "Clear!!";
+  eLblCorrectCount.innerText = correctCount;
+  eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
+  
+  saveScore();
 
-    eLblWaitCount = '';
-    clearInterval(intervalId);
+  eLblWaitCount = '';
+  clearInterval(intervalId);
 
-    eBtnEntry.disabled = true;
+  eBtnEntry.disabled = true;
 
-    let answer = '';
-    for(let i in missNumber){
-	answer = answer + missAnswer[i] + '(' + to2Digit(missNumber[i]) + ')' + '\n';
-    }
-    eLblMissAnswer.innerText = answer
+  let answer = '';
+  for(let i in missNumber){
+    answer = answer + missAnswer[i] + '(' + to2Digit(missNumber[i]) + ')' + '>>' + correctAnswer[i] + '\n';
+  }
+  eLblMissAnswer.innerText = answer
 
 }
 
 function setWaitCount() {
-    'use strict';
-    let str = ' ';
-    for(let i = 0;i < waitCount; i++){
-        str = str + '*';
-    }
-    eLblWaitCount.innerText = str;
+  'use strict';
+  let str = ' ';
+  for(let i = 0;i < waitCount; i++){
+      str = str + '*';
+  }
+  eLblWaitCount.innerText = str;
 }
 
 function setQuestion(currentId, correctCnt){
-    'use strict';
+  'use strict';
 
-    eLblNumberQuestions.innerText = currentId + '/' + answers.length;
-    eLblCorrectCount.innerText = correctCnt;
+  eLblNumberQuestions.innerText = currentId + '/' + answers.length;
+  eLblCorrectCount.innerText = correctCnt;
 
-    eLblNumber.innerText = to2Digit(answers[currentId].num);
-    currentCorrect = answers[currentId].word.split(',');
-    eTxtInput.value = '';
-    waitCount = WAIT_MAX_COUNT;
-    setWaitCount();
+  eLblNumber.innerText = to2Digit(answers[currentId].num);
+  currentCorrect = answers[currentId].word.split(',');
+  eTxtInput.value = '';
+  waitCount = WAIT_MAX_COUNT;
+  setWaitCount();
 }
 
 function countdown() {
-    'use strict';
-    waitCount -= 1;
-    if(0 < waitCount){setWaitCount();}
-    else{
-	missNumber.push(answers[currentIndex].num);
-	missAnswer.push('NO ANSWER');
-	
-	eTxtInput.value = '';
+  'use strict';
+  waitCount -= 1;
+  if(0 < waitCount){setWaitCount();}
+  else{
+    missNumber.push(answers[currentIndex].num);
+    missAnswer.push('NO ANSWER');
+    correctAnswer.push(currentCorrect);
+    
+    eTxtInput.value = '';
 
-	const isTimeup = true;
-	setRecord(isTimeup);
+    const isTimeup = true;
+    setRecord(isTimeup);
 
-	if(currentIndex !== answers.length){
-	    currentIndex += 1;
-	    if(currentIndex !== answers.length){
-		setQuestion(currentIndex, correctCount);
-	    }else{
-		eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
-		setClear();
-	    }
-	}
-    }       
+    if(currentIndex !== answers.length){
+      currentIndex += 1;
+      if(currentIndex !== answers.length){
+        setQuestion(currentIndex, correctCount);
+      }else{
+        eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
+        setClear();
+      }
+    }
+  }       
 }
 
 function setStartTimer() {
-    'use strict';
-    let nowDate = new Date();
-    recStartTime = nowDate.getTime();
+  'use strict';
+  let nowDate = new Date();
+  recStartTime = nowDate.getTime();
 }
 
 function setRecord(isTimeup){
-    'use strict';
+  'use strict';
 
-    let nowDate = new Date()
-    let sec = (nowDate.getTime() - recStartTime) / 1000 ;
-    recStartTime = nowDate.getTime();
+  let nowDate = new Date()
+  let sec = (nowDate.getTime() - recStartTime) / 1000 ;
+  recStartTime = nowDate.getTime();
 
-    if(isTimeup){
-	recSec.push(WAIT_MAX_COUNT);
-    }else{
-	recSec.push(sec);
-    }
-
-    recWord.push(eTxtInput.value);
-    recNum.push(answers[currentIndex].num);
+  if(isTimeup){
+    recSec.push(WAIT_MAX_COUNT);
+  }else{
+    recSec.push(sec);
+  }
+  recWord.push(eTxtInput.value);
+  recNum.push(answers[currentIndex].num);
 }
 
 
 function clickBtnStart() {
-    'use strict';
-    
-    setQuestion(currentIndex, correctCount);
-    intervalId = setInterval(countdown, 1000);
+  'use strict';
+  
+  setQuestion(currentIndex, correctCount);
+  intervalId = setInterval(countdown, 1000);
 
-    eBtnStart.disabled = true;
-    eLblStatus.innerText = 'Please enter the answer';
+  eBtnStart.disabled = true;
+  eLblStatus.innerText = 'Please enter the answer';
 
-    document.getElementById("txtInput").focus();
-    setStartTimer();
+  document.getElementById("txtInput").focus();
+  setStartTimer();
 }
 
 
 function clickBtnEntry(){
-    'use strict';
-    
-    if(currentCorrect.includes(eTxtInput.value)){
-	const isTimeup = false;
-        setRecord(isTimeup);
+  'use strict';
+  
+  if(currentCorrect.includes(eTxtInput.value)){
+    const isTimeup = false;
+    setRecord(isTimeup);
 
-        currentIndex += 1;
-        correctCount += 1;
+    currentIndex += 1;
+    correctCount += 1;
 
-        if(currentIndex !== answers.length){
-            eLblStatus.innerText = "OK";
-            setQuestion(currentIndex, correctCount); 
-            
-        }else{
-	    setClear();
-        }
+    if(currentIndex !== answers.length){
+      eLblStatus.innerText = "OK";
+      setQuestion(currentIndex, correctCount); 
     }else{
-        eLblStatus.innerText = "NG";
-        missNumber.push(answers[currentIndex].num);
-        missAnswer.push(eTxtInput.value);
+      setClear();
     }
+  }else{
+    eLblStatus.innerText = "NG";
+    missNumber.push(answers[currentIndex].num);
+    missAnswer.push(eTxtInput.value);
+    correctAnswer.push(currentCorrect);
+  }
 }
 
 window.addEventListener('DOMContentLoaded', function() {
-    'use strict';
-    let el = document.createElement("script");
-    el.src = "common.js";
-    document.body.appendChild(el);
+  'use strict';
+  let el = document.createElement("script");
+  el.src = "common.js";
+  document.body.appendChild(el);
 })
 
 
 function keyInput() {
-    'use strict';
-    const KEYCODE_ENTER = 13;
-    console.log(event.keyCode);
-    
-    if(event.keyCode === 9){ //9:tab
-      clickBtnMenuTest();
-    }
-    if(event.keyCode === 17){ //17:Ctrl
-      clickBtnStart();
-    }
+  'use strict';
+  const KEYCODE_ENTER = 13;
+  console.log(event.keyCode);
+  
+  if(event.keyCode === 9){ //9:tab
+    clickBtnMenuTest();
+  }
+  if(event.keyCode === 17){ //17:Ctrl
+    clickBtnStart();
+  }
 
-    if(currentIndex >= answers.length){
-        return;
-    }
-    if(event.keyCode === KEYCODE_ENTER) {
-        event.preventDefault();
-        clickBtnEntry();
-    }
+  if(currentIndex >= answers.length){
+      return;
+  }
+  if(event.keyCode === KEYCODE_ENTER) {
+      event.preventDefault();
+      clickBtnEntry();
+  }
 }
 function clickBtnMenuTest(){
-    'use strict';
-    clickBtnMenu('test');
+  'use strict';
+  clickBtnMenu('test');
 }
+
 let db;
 window.onload = function () {
-    'use strict';
+  'use strict';
 
-    document.body.onkeyup = keyInput;
+  document.body.onkeyup = keyInput;
 
-    eBtnStart = document.getElementById("btnStart");
+  eBtnStart = document.getElementById("btnStart");
+  
+  eBtnEntry= document.getElementById("btnEntry");
+  eBtnMenu= document.getElementById("btnMenu");
+  eTxtInput = document.getElementById("txtInput");
+
+  eLblStatus = document.getElementById("lblStatus");
+  eLblWaitCount = document.getElementById("lblWaitCount");
+  eLblMissAnswer = document.getElementById("lblMissAnswer");
+  eLblCorrectCount= document.getElementById("lblCorrectCount");
+  eLblNumber = document.getElementById("lblNumber");
+  eLblNumberQuestions = document.getElementById("lblNumberQuestions");
+
+  eBtnMenu= document.getElementById("btnMenu");
+  eBtnEntry.addEventListener("click", clickBtnEntry, false);
+  eBtnMenu.addEventListener("click", clickBtnMenuTest, false);
+  eBtnStart.addEventListener("click", clickBtnStart, false);
+
+  //--------------
+  //DB definition
+  //--------------
+  db = getDexie(); 
+
+  db.version(4).stores({
+    play_log: getDbColPlayLog(),
+    input: getDbColInput(),
+    test: getDbColTest(),
+    input_back: getDbColInputBack()
+  });
     
-    eBtnEntry= document.getElementById("btnEntry");
-    eBtnMenu= document.getElementById("btnMenu");
-    eTxtInput = document.getElementById("txtInput");
-
-    eLblStatus = document.getElementById("lblStatus");
-    eLblWaitCount = document.getElementById("lblWaitCount");
-    eLblMissAnswer = document.getElementById("lblMissAnswer");
-    eLblCorrectCount= document.getElementById("lblCorrectCount");
-    eLblNumber = document.getElementById("lblNumber");
-    eLblNumberQuestions = document.getElementById("lblNumberQuestions");
- 
-    eBtnMenu= document.getElementById("btnMenu");
-    eBtnEntry.addEventListener("click", clickBtnEntry, false);
-    eBtnMenu.addEventListener("click", clickBtnMenuTest, false);
-    eBtnStart.addEventListener("click", clickBtnStart, false);
-
-    //--------------
-    //DB definition
-    //--------------
-    db = getDexie(); 
-
-    db.version(4).stores({
-	play_log: getDbColPlayLog(),
-	input: getDbColInput(),
-	test: getDbColTest(),
-	input_back: getDbColInputBack()
-    });
-    
-    //--------------
-    //DB definition
-    //--------------
-    let param = location.search.split('=')
-    if(param.length !== 2){
-	alert('There are no parameters in the URL. Please start from the menu.');
-    }else if(isFinite(param[1])){
-	startNumber = param[1] * 10;
-	loadCorrectAnswer(startNumber);
-    }else{
-	let questionCount = param[1].split(',')[1]
-	loadCorrectAnswerRandom(questionCount);
-    }
-
-    init();
-
+  //--------------
+  //DB definition
+  //--------------
+  let param = location.search.split('=')
+  if(param.length !== 2){
+    alert('There are no parameters in the URL. Please start from the menu.');
+  }else if(isFinite(param[1])){
+    startNumber = param[1] * 10;
+    loadCorrectAnswer(startNumber);
+  }else{
+    let questionCount = param[1].split(',')[1]
+    loadCorrectAnswerRandom(questionCount);
+  }
+  init();
 }
-
-
