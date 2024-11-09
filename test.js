@@ -1,4 +1,7 @@
 ﻿/*globals window, document, setInterval, event , localStorage */
+//'use strict';
+
+let db;
 
 let eBtnStart;
 let eBtnEntry;
@@ -34,7 +37,6 @@ let recStartTime;
 let startNumber;
 
 function init(){
-  'use strict';
   currentIndex = 0;
   correctCount = 0;
   waitCount = WAIT_MAX_COUNT;
@@ -64,8 +66,6 @@ function init(){
 }
 
 function getRandom(min, max) {
-  'use strict';
-  
   let range = max - min + 1;
   let ramdomRange = Math.floor(Math.random() * range);
   let randomNum = ramdomRange + min;
@@ -73,7 +73,6 @@ function getRandom(min, max) {
 }
 
 function getShuffle(rec){
-  'use strict';
   let workRecord = rec.slice();
   let newRecord = [];
   let maxIndex;
@@ -99,7 +98,6 @@ function loadCorrectAnswerRandom(qCount){
       return;
     }
 
-    //for(let i in rec){ console.log(rec[i].num + ':' + rec[i].sec);}
     let sortRec = getSortNum(rec)
     let sumRec = getRecordSummary(sortRec)
     let worstCount = qCount / 3;
@@ -139,7 +137,6 @@ function loadCorrectAnswerRandom(qCount){
 
       writeCount += 1
     }
-    //
     //-------------------------------------------
     //get max worst
     //-------------------------------------------
@@ -167,7 +164,7 @@ function loadCorrectAnswerRandom(qCount){
 
       writeCount += 1
     }
-    //
+
     //-------------------------------------------
     //Get the one with the least number of tests
     //-------------------------------------------
@@ -179,8 +176,8 @@ function loadCorrectAnswerRandom(qCount){
 
       for(let i in workRec.num){
         if(workRec.count[i] < minCount){
-                      minIndex = i;
-                      minCount = workRec.count[i] ;
+          minIndex = i;
+          minCount = workRec.count[i] ;
         }
       }
 
@@ -198,12 +195,9 @@ function loadCorrectAnswerRandom(qCount){
     }
 
     db.input.bulkGet(questionNum).then((rec)=>{
-      console.log("rec:"+rec)
       if(rec.length === 0){
         alert("This is an error. I couldn't get the answer.");
       }else{
-        //console.log('rec[0].num : '+ rec[0].num);
-        //console.log('rec[1].word : ' + rec[0].word);
         answers = getShuffle(rec);
       }
     }).catch((error)=>{console.log(error);});
@@ -211,7 +205,7 @@ function loadCorrectAnswerRandom(qCount){
 }
 
 function loadCorrectAnswer(startNum, questionCount = 10){
- 
+
   db.input.where("num")
     .between(parseInt(startNum), parseInt(startNum) + parseInt(questionCount))
     .toArray()
@@ -224,10 +218,9 @@ function loadCorrectAnswer(startNum, questionCount = 10){
      }
   })
   .catch((error)=>{console.log(error);});
-}    
+}
 
 function saveScore(){
-  'use strict';
   let logDate = getLogdate();
 
   db.play_log.add({log_date:logDate,mode:'test',range_index:rangeIndex});
@@ -237,11 +230,10 @@ function saveScore(){
 }
 
 function setClear() {
-  'use strict';
   eLblStatus.innerText = "Clear!!";
   eLblCorrectCount.innerText = correctCount;
   eLblNumberQuestions.innerText = currentIndex + '/' + answers.length;
-  
+
   saveScore();
 
   eLblWaitCount = '';
@@ -254,11 +246,9 @@ function setClear() {
     answer = answer + missAnswer[i] + '(' + to2Digit(missNumber[i]) + ')' + '>>' + correctAnswer[i] + '\n';
   }
   eLblMissAnswer.innerText = answer
-
 }
 
 function setWaitCount() {
-  'use strict';
   let str = ' ';
   for(let i = 0;i < waitCount; i++){
       str = str + '*';
@@ -267,7 +257,6 @@ function setWaitCount() {
 }
 
 function setQuestion(currentId, correctCnt){
-  'use strict';
 
   eLblNumberQuestions.innerText = currentId + '/' + answers.length;
   eLblCorrectCount.innerText = correctCnt;
@@ -280,14 +269,15 @@ function setQuestion(currentId, correctCnt){
 }
 
 function countdown() {
-  'use strict';
   waitCount -= 1;
-  if(0 < waitCount){setWaitCount();}
-  else{
+  if(0 < waitCount){
+    setWaitCount();
+  }else{
     missNumber.push(answers[currentIndex].num);
     missAnswer.push('NO ANSWER');
     correctAnswer.push(currentCorrect);
-    
+
+    eLblStatus.innerText = "NG(" + currentCorrect + ")";
     eTxtInput.value = '';
 
     const isTimeup = true;
@@ -302,18 +292,15 @@ function countdown() {
         setClear();
       }
     }
-  }       
+  }
 }
 
 function setStartTimer() {
-  'use strict';
   let nowDate = new Date();
   recStartTime = nowDate.getTime();
 }
 
 function setRecord(isTimeup){
-  'use strict';
-
   let nowDate = new Date()
   let sec = (nowDate.getTime() - recStartTime) / 1000 ;
   recStartTime = nowDate.getTime();
@@ -329,8 +316,6 @@ function setRecord(isTimeup){
 
 
 function clickBtnStart() {
-  'use strict';
-  
   setQuestion(currentIndex, correctCount);
   intervalId = setInterval(countdown, 1000);
 
@@ -341,10 +326,7 @@ function clickBtnStart() {
   setStartTimer();
 }
 
-
 function clickBtnEntry(){
-  'use strict';
-  
   if(currentCorrect.includes(eTxtInput.value)){
     const isTimeup = false;
     setRecord(isTimeup);
@@ -367,15 +349,12 @@ function clickBtnEntry(){
 }
 
 window.addEventListener('DOMContentLoaded', function() {
-  'use strict';
   let el = document.createElement("script");
   el.src = "common.js";
   document.body.appendChild(el);
 })
 
-
 function keyInput() {
-  'use strict';
   const KEYCODE_ENTER = 13;
   
   if(event.keyCode === 9){ //9:tab
@@ -386,26 +365,23 @@ function keyInput() {
   }
 
   if(currentIndex >= answers.length){
-      return;
+    return;
   }
   if(event.keyCode === KEYCODE_ENTER) {
-      event.preventDefault();
-      clickBtnEntry();
+    event.preventDefault();
+    clickBtnEntry();
   }
 }
 function clickBtnMenuTest(){
-  'use strict';
   clickBtnMenu('test');
 }
 
-let db;
-window.onload = async function () {
-  'use strict';
+window.onload = function () {
 
   document.body.onkeyup = keyInput;
 
   eBtnStart = document.getElementById("btnStart");
-  
+
   eBtnEntry= document.getElementById("btnEntry");
   eBtnMenu= document.getElementById("btnMenu");
   eTxtInput = document.getElementById("txtInput");
@@ -458,16 +434,14 @@ window.onload = async function () {
           }
         }
       }
-      //console.log("testAnswer:" + testAnswer);
     })
-      if(testAnswer.length <= 9){
-        console.log("check2");
-        let startNumber = getRandom(0, 7)
-        loadCorrectAnswer(startNumber*10,questionCount);
-      }else{
-        console.log("check3");
-        loadCorrectAnswerRandom(questionCount);
-      }
+    if(testAnswer.length <= 9){
+      let startNumber = getRandom(0, 7)
+      loadCorrectAnswer(startNumber*10,questionCount);
+    }else{
+      console.log("call loadCorrectAnswerRandom");
+      loadCorrectAnswerRandom(questionCount);
+    }
   }
   init();
 }
