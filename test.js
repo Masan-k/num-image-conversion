@@ -213,9 +213,10 @@ function loadCorrectAnswerRandom(qCount){
 function loadCorrectAnswer(startNum, questionCount = 10){
  
   db.input.where("num")
-    .between(parseInt(startNum), parseInt(startNum) + questionCount)
+    .between(parseInt(startNum), parseInt(startNum) + parseInt(questionCount))
     .toArray()
     .then((rec)=>{
+
      if(rec === undefined){
        alert("This is an error. I couldn't get the answer.");
      }else{
@@ -457,15 +458,16 @@ window.onload = async function () {
           }
         }
       }
-      console.log("testAnswer:" + testAnswer);
+      //console.log("testAnswer:" + testAnswer);
     })
-
-    if(testAnswer.length <= 9){
-      let startNumber = getRandom(0, 7)
-      loadCorrectAnswer(startNumber,questionCount);
-    }else{
-      loadCorrectAnswerRandom(questionCount);
-    }
+      if(testAnswer.length <= 9){
+        console.log("check2");
+        let startNumber = getRandom(0, 7)
+        loadCorrectAnswer(startNumber*10,questionCount);
+      }else{
+        console.log("check3");
+        loadCorrectAnswerRandom(questionCount);
+      }
   }
   init();
 }
