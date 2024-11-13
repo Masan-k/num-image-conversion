@@ -320,6 +320,7 @@ function clickBtnStart() {
   intervalId = setInterval(countdown, 1000);
 
   eBtnStart.disabled = true;
+  eBtnStart.style.visibility = "hidden";
   eLblStatus.innerText = 'Please enter the answer';
 
   document.getElementById("txtInput").focus();
@@ -409,7 +410,7 @@ window.onload = function () {
     test: getDbColTest(),
     input_back: getDbColInputBack()
   });
-    
+
   //--------------
   //DB definition
   //--------------
