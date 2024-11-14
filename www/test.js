@@ -3,8 +3,7 @@
 
 let db;
 
-let eBtnStart;
-let eBtnEntry;
+let eBtnRun;
 let eTxtInput;
 let eBtnMenu;
 let eLblStatus;
@@ -53,8 +52,7 @@ function init(){
   eLblStatus.innerText = 'Waiting for start';
   eTxtInput.value = '';
 
-  eBtnEntry.disabled = false;
-  eBtnStart.disabled = false;
+  eBtnRun.disabled = false;
 
   missNumber = [];
   missAnswer = [];
@@ -239,7 +237,7 @@ function setClear() {
   eLblWaitCount = '';
   clearInterval(intervalId);
 
-  eBtnEntry.disabled = true;
+  eBtnRun.disabled = true;
 
   let answer = '';
   for(let i in missNumber){
@@ -314,17 +312,41 @@ function setRecord(isTimeup){
   recNum.push(answers[currentIndex].num);
 }
 
+let isStarted = false;
+function clickBtnRun() {
 
-function clickBtnStart() {
-  setQuestion(currentIndex, correctCount);
-  intervalId = setInterval(countdown, 1000);
+  if(!isStarted){
+    isStarted = true;
+    eBtnRun.value = "Entry";
 
-  eBtnStart.disabled = true;
-  eBtnStart.style.visibility = "hidden";
-  eLblStatus.innerText = 'Please enter the answer';
+    setQuestion(currentIndex, correctCount);
+    intervalId = setInterval(countdown, 1000);
 
-  document.getElementById("txtInput").focus();
-  setStartTimer();
+    eLblStatus.innerText = 'Please enter the answer';
+
+    document.getElementById("txtInput").focus();
+    setStartTimer();
+
+  }else{
+    if(currentCorrect.includes(eTxtInput.value)){
+    const isTimeup = false;
+    setRecord(isTimeup);
+
+    currentIndex += 1;
+    correctCount += 1;
+
+    if(currentIndex !== answers.length){
+      eLblStatus.innerText = "OK";
+      setQuestion(currentIndex, correctCount); 
+    }else{
+      setClear();
+    }}else{
+      eLblStatus.innerText = "NG";
+      missNumber.push(answers[currentIndex].num);
+      missAnswer.push(eTxtInput.value);
+      correctAnswer.push(currentCorrect);
+    }
+  }
 }
 
 function clickBtnEntry(){
@@ -362,7 +384,7 @@ function keyInput() {
     clickBtnMenuTest();
   }
   if(event.keyCode === 17){ //17:Ctrl
-    clickBtnStart();
+    clickBtnRun();
   }
 
   if(currentIndex >= answers.length){
@@ -370,7 +392,7 @@ function keyInput() {
   }
   if(event.keyCode === KEYCODE_ENTER) {
     event.preventDefault();
-    clickBtnEntry();
+    clickBtnRun();
   }
 }
 function clickBtnMenuTest(){
@@ -381,9 +403,8 @@ window.onload = function () {
 
   document.body.onkeyup = keyInput;
 
-  eBtnStart = document.getElementById("btnStart");
+  eBtnRun = document.getElementById("btnRun");
 
-  eBtnEntry= document.getElementById("btnEntry");
   eBtnMenu= document.getElementById("btnMenu");
   eTxtInput = document.getElementById("txtInput");
 
@@ -395,9 +416,8 @@ window.onload = function () {
   eLblNumberQuestions = document.getElementById("lblNumberQuestions");
 
   eBtnMenu= document.getElementById("btnMenu");
-  eBtnEntry.addEventListener("click", clickBtnEntry, false);
   eBtnMenu.addEventListener("click", clickBtnMenuTest, false);
-  eBtnStart.addEventListener("click", clickBtnStart, false);
+  eBtnRun.addEventListener("click", clickBtnRun, false);
 
   //--------------
   //DB definition
