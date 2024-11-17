@@ -83,21 +83,18 @@ function getShuffle(rec){
     workRecord.splice(randomIndex, 1);
   }
   return newRecord;
+
 }
 
 function loadCorrectAnswerRandom(qCount){
 
   //Search for "-1" to use "SortBy"
   db.test.where('log_date').above(-1).reverse().sortBy('log_date').then((rec)=>{
-    //
     //Error if the number tested is less than the specified number.
-    if(sumRec.length === undefined || sumRec.length < qCount){
-      alert('This is an error. The number tested is less than or equal to the specified number.');
-      return;
-    }
-
     let sortRec = getSortNum(rec)
+
     let sumRec = getRecordSummary(sortRec)
+
     let worstCount = qCount / 3;
     let avgCount = qCount / 3;
     let testCount = qCount / 3;
@@ -105,6 +102,11 @@ function loadCorrectAnswerRandom(qCount){
 
     let questionNum = [];
     let questionSec = []; //test code
+
+    if(sumRec.num.length === undefined || sumRec.num.length < qCount){
+      alert('This is an error. The number tested is less than or equal to the specified number.');
+      return;
+    }
 
     //-------------------------------------------
     //get max average
@@ -443,26 +445,46 @@ window.onload = function () {
     loadCorrectAnswer(startNumber);
 
   }else{
-    let questionCount = param[1].split(',')[1]
     let testAnswer = [];
-   
+    let testAnswerWork = [];
+    let questionCount = param[1].split(',')[1];
+    let isFind;
+    let numFind = -1;
+ 
     db.test.toArray().then((rec)=>{
       for(let i = 0; i <= rec.length -1; i++){
         for(let j = 0; j <= 9; j++){
-          if(rec[i].num % (j*10) ===0){
+          if(rec[i].num  === j*10){
             testAnswer.push(j); 
             break;
           }
         }
       }
+      testAnswer.sort();
+      for(let i = 0; i <= testAnswer.length; i++){
+        isFind = false;
+        if(numFind != testAnswer[i]){
+          for(let j=0; j <= 9; j++){
+            if(!isFind && testAnswer[i] === j){
+              testAnswerWork.push(j);
+              numFind = j;
+              isFind = true
+            }
+          }
+        }
+      }
+
+      if(testAnswerWork.length <= 9){
+        let startNumber = getRandom(0, 7)
+        console.log("call loadCorrectAnswer");
+        console.log("getRandom(startNumber):" + startNumber);
+        loadCorrectAnswer(startNumber*10,questionCount);
+
+      }else{
+        console.log("call loadCorrectAnswerRandom");
+        loadCorrectAnswerRandom(questionCount);
+      }
     })
-    if(testAnswer.length <= 9){
-      let startNumber = getRandom(0, 7)
-      loadCorrectAnswer(startNumber*10,questionCount);
-    }else{
-      console.log("call loadCorrectAnswerRandom");
-      loadCorrectAnswerRandom(questionCount);
-    }
   }
   init();
 }
