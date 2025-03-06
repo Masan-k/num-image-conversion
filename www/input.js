@@ -12,9 +12,9 @@ let db;
 function keyInput() {
     'use strict';
     const KEYCODE_ENTER = 13;
-    if(event.keyCode === KEYCODE_ENTER) {
-        clickBtnEntry();
-    }
+    //if(event.keyCode === KEYCODE_ENTER) {
+    //    clickBtnEntry();
+    //}
     if(event.keyCode === 9){ //9:tab
       clickBtnMenuInput();
     }
@@ -48,6 +48,7 @@ function saveScore(){
 
 function clickBtnEntry(){
   'use strict';
+
   if(eTxtInput.value.trim().length===0){
     alert('Input is required.');
     return;
@@ -62,6 +63,7 @@ function clickBtnEntry(){
   if(currentNumber < endNumber){
     eLblNumber.innerText = to2Digit(currentNumber);
     setWord();
+    eTxtInput.focus();
   }else{
     saveScore();
     eLblNumber.innerText = to2Digit(startNumber) + '-' + to2Digit((parseInt(startNumber) + 9));
@@ -118,7 +120,7 @@ window.onload = function () {
   eLblNumber = document.getElementById("lblNumber");
 
   //event
-  document.body.onkeyup = keyInput;
+  //document.body.onkeyup = keyInput;
   eBtnEntry.addEventListener("click", clickBtnEntry, false);
   eBtnMenu.addEventListener("click", clickBtnMenuInput, false);
 
